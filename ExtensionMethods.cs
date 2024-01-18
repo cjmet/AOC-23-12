@@ -1,4 +1,6 @@
 ﻿
+using System.Diagnostics.CodeAnalysis;
+
 namespace AOC_23_12
 {
 	public static class ExtensionMethods
@@ -21,6 +23,17 @@ namespace AOC_23_12
 				return files[0];
 			}
 		}
-		
+
+
+		public static void Assert([DoesNotReturnIf(false)] bool condition, string? message = null)
+		{
+			if (!condition)
+			{
+				throw new Exception(message);
+			}
+		}
+
+
 	}
+
 }
