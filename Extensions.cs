@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace AOC_23_12
 {
-	public static class ExtensionMethods
+	public static class Extensions
 	{
 		public static string FindFileInVisualStudio(string filename, SearchOption searchOption = SearchOption.AllDirectories)
 		{
