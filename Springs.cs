@@ -20,7 +20,7 @@ namespace AOC_23_12
 			
 			_springs = OptimizeDots(springsString).ToCharArray();
 			_data = dataString.Split(",").Select(x => int.Parse(x)).ToArray();
-			_cache = new int[25,15];
+			_cache = new int[125,75];
 			foreach (int i in _cache) _cache[i % 25, i / 25] = -1;
 		}
 
@@ -47,12 +47,13 @@ namespace AOC_23_12
 			if (IsEOL(springIndex)) return _cache[springIndex, clusterIndex] = 0;
 			int found = 0;
 
-			if (IsSpring(springIndex)) found += FindRecursiveMatches(springIndex + 1, clusterIndex);  // Increment Right
-			if (SpringsMatchesCluster(springIndex, _data[clusterIndex])) found += FindRecursiveMatches(springIndex + _data[clusterIndex] + 1, clusterIndex + 1); // Increment Right Searching for Cluster
+			// Increment Right
+			if (IsSpring(springIndex)) found += FindRecursiveMatches(springIndex + 1, clusterIndex);
+			// Increment Down
+			if (SpringsMatchesCluster(springIndex, _data[clusterIndex])) found += FindRecursiveMatches(springIndex + _data[clusterIndex] + 1, clusterIndex + 1);
 
 			return _cache[springIndex, clusterIndex] = found;
 		}
-
 
 
 
