@@ -4,13 +4,13 @@ using static AOC_23_12.Extensions;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-int sum = 0;
+long sum = 0;
 int springArraySize = 0;
 int dataArraySize = 0;
 int lineNum = 0;
 
 var filename = FindFileInVisualStudio("input.txt");
-filename = FindFileInVisualStudio("test.txt");
+//filename = FindFileInVisualStudio("test.txt");
 Console.WriteLine($"Attempting to read {filename}");
 Console.WriteLine();
 
@@ -48,7 +48,7 @@ foreach (string line in File.ReadLines(filename))
 
 	Springs springs = new Springs(springsString, dataString);
 
-	int combinations = springs.FindRecursiveMatches();              // < ============================
+	long combinations = springs.FindRecursiveMatches();              // < ============================
 	
 	Console.WriteLine($"{combinations}");
 	sum += combinations;
@@ -62,5 +62,5 @@ Console.WriteLine($"Spring Array Size: {springArraySize},     Data Array Size: {
 Springs info = new Springs();
 Console.WriteLine($"Usage: {info.Usage},     Cache Used: {info.CacheUsed}");
 Console.WriteLine($"Sum: {sum}");
-Assert(sum == 21 || sum == 7032 || sum == 525152, "Incorrect Answer");
+Assert(sum == 21 || sum == 7032 || sum == 525152 || sum == 1493340882140, "Incorrect Answer");
 Environment.Exit(0);

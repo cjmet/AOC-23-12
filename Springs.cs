@@ -7,7 +7,7 @@ namespace AOC_23_12
 	{
 		char[] _springs;
 		int[] _data;
-		static int[,] _cache;
+		static long[,] _cache;
 		static int _cacheUsed = 0;
 		static int _usage = 0;
 
@@ -18,10 +18,11 @@ namespace AOC_23_12
 		public Springs(string springsString, string dataString)
 		{
 			
-			_springs = OptimizeDots(springsString).ToCharArray();
+			_springs = springsString.ToCharArray();
 			_data = dataString.Split(",").Select(x => int.Parse(x)).ToArray();
-			_cache = new int[125,75];
-			foreach (int i in _cache) _cache[i % 25, i / 25] = -1;
+			_cache = new long[125,75];
+			//initialize _cache
+			for (int i = 0; i < 125; i++) for (int j = 0; j < 75; j++) _cache[i, j] = -1;
 		}
 
 		private string OptimizeDots(string source)
@@ -34,24 +35,24 @@ namespace AOC_23_12
 			return optimized;
 		}
 
-		public int FindRecursiveMatches() => FindRecursiveMatches(0, 0);
-		public int FindRecursiveMatches(int springIndex, int clusterIndex)
+		public long FindRecursiveMatches() => FindRecursiveMatches(0, 0);
+		public long FindRecursiveMatches(int springIndex, int clusterIndex)
 		{
 			_usage++;
-			if (_cache[springIndex, clusterIndex] > 0) { _cacheUsed++; return _cache[springIndex, clusterIndex]; }
+			if (_cache[springIndex, clusterIndex] >= 0) { _cacheUsed++; return _cache[springIndex, clusterIndex]; }
 
 			if (clusterIndex >= _data.Length)		
 				if (TailCheck(springIndex)) return _cache[springIndex, clusterIndex] = 1;  
 				else return _cache[springIndex, clusterIndex] = 0;
 
 			if (IsEOL(springIndex)) return _cache[springIndex, clusterIndex] = 0;
-			int found = 0;
+			long found = 0;
 
-			// Increment Right
-			if (IsSpring(springIndex)) found += FindRecursiveMatches(springIndex + 1, clusterIndex);
 			// Increment Down
 			if (SpringsMatchesCluster(springIndex, _data[clusterIndex])) found += FindRecursiveMatches(springIndex + _data[clusterIndex] + 1, clusterIndex + 1);
-
+			// Increment Right
+			if (IsSpring(springIndex)) found += FindRecursiveMatches(springIndex + 1, clusterIndex);
+			
 			return _cache[springIndex, clusterIndex] = found;
 		}
 
