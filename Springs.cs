@@ -13,12 +13,13 @@ namespace AOC_23_12
 
         public int CacheUsed { get { return _cacheUsed; } }
 		public int Usage { get { return _usage; } }
+		static public void Reset() { _cacheUsed = 0; _usage = 0; }
 
 		public Springs() => new Springs(".", "1"); 
 		public Springs(string springsString, string dataString)
 		{
 			
-			_springs = springsString.ToCharArray();
+			_springs = OptimizeDots(springsString).ToCharArray();
 			_data = dataString.Split(",").Select(x => int.Parse(x)).ToArray();
 			_cache = new long[125,75];
 			//initialize _cache
@@ -74,6 +75,29 @@ namespace AOC_23_12
 
 			return true;
 		}
+
+
+
+		// Console.Writeline _cache with formatting 
+		public void PrintCache()
+		{
+			if (_data == null) return;
+			if (_springs == null) return;
+
+			foreach (char c in _springs) Console.Write($"  {c}");
+			Console.Write("     ");
+			Console.WriteLine($"{String.Join(",", _data)}");
+			
+			for (int y = 0; y <  _data.Length; y++)
+			{
+                for (int x = 0; x < _springs.Length; x++)
+				{
+						if (_cache[x,y] >= 0) Console.Write($"{_cache[x, y],3}");
+						else Console.Write($"  .");
+                }
+                Console.WriteLine();
+            }
+        }
 
 
 

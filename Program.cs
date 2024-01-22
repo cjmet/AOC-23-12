@@ -1,66 +1,93 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using AOC_23_12;
-using static AOC_23_12.Extensions;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
+using static AOC_23_12.Extensions;
 
-long sum = 0;
-int springArraySize = 0;
-int dataArraySize = 0;
-int lineNum = 0;
 
-var filename = FindFileInVisualStudio("input.txt");
-//filename = FindFileInVisualStudio("test.txt");
-Console.WriteLine($"Attempting to read {filename}");
-Console.WriteLine();
+Console.WriteLine("Hello, World!");
 
-Stopwatch stopWatch = new Stopwatch();
-stopWatch.Start();
-foreach (string line in File.ReadLines(filename))
-{
-	Console.Write($"{++lineNum}: {line} => ");
-	if (line.Length == 0)
-	{
-		Console.WriteLine("Blank Line Found, Exiting.");
-		break;
-	}
+SubMain("test.txt", Part.Part1);
 
-	// Split the line into its parts
-	string[] parts = line.Split(" ");
-	Assert(parts.Length == 2, "Error[0030] Invalid Input");
-	string springsString = parts[0];
-	string dataString = parts[1];
+SubMain("input.txt", Part.Part1);
 
-	// Part 2
-	bool Part2 = true;
-	if (Part2) {
-		string tmpSpring = springsString;
-		string tmpData = dataString;
-		for (int i = 0; i < 4; i++)
-		{
-			springsString += "?" + tmpSpring;
-			dataString += "," + tmpData;
-		}
-	}
+SubMain("test.txt", Part.Part2);
 
-	springArraySize = int.Max(springArraySize, springsString.Length);
-	dataArraySize = int.Max(dataArraySize, dataString.Length);
+SubMain("input.txt", Part.Part2);
 
-	Springs springs = new Springs(springsString, dataString);
+Print_Test_Array("??.??.??.??.??.", "1,1,1,1,1");
+Print_Test_Array(".#.????.???.#.??.", "1,1,1,1,1");
 
-	long combinations = springs.FindRecursiveMatches();              // < ============================
-	
-	Console.WriteLine($"{combinations}");
-	sum += combinations;
-}
-stopWatch.Stop();
-
-Console.WriteLine();
-Console.WriteLine("===========================================================");
-Console.WriteLine($"Execution Time: {stopWatch.Elapsed}s");
-Console.WriteLine($"Spring Array Size: {springArraySize},     Data Array Size: {dataArraySize}");
-Springs info = new Springs();
-Console.WriteLine($"Usage: {info.Usage},     Cache Used: {info.CacheUsed}");
-Console.WriteLine($"Sum: {sum}");
-Assert(sum == 21 || sum == 7032 || sum == 525152 || sum == 1493340882140, "Incorrect Answer");
 Environment.Exit(0);
+
+
+
+////**********************************************************************************************************************
+
+
+
+void SubMain(string filename, Part part)
+{
+    long sum = 0;
+    Springs.Reset();
+
+    filename = FindFileInVisualStudio(filename);
+    Debug.WriteLine($"Attempting to read {filename}");
+
+    Stopwatch stopWatch = new Stopwatch();
+    stopWatch.Start();
+    foreach (string line in File.ReadLines(filename))
+    {
+        Debug.Write($"{line} => ");
+        if (line.Length == 0)
+        {
+            Console.WriteLine("Blank Line Found, Exiting.");
+            break;
+        }
+
+        // Split the line into its parts
+        string[] parts = line.Split(" ");
+        Assert(parts.Length == 2, "Error[0030] Invalid Input");
+        string springsString = parts[0];
+        string dataString = parts[1];
+
+        // Part 2
+        if (part == Part.Part2)
+        {
+            string tmpSpring = springsString;
+            string tmpData = dataString;
+            for (int i = 0; i < 4; i++)
+            {
+                springsString += "?" + tmpSpring;
+                dataString += "," + tmpData;
+            }
+        }
+
+        Springs springs = new Springs(springsString, dataString);
+        long combinations = springs.FindRecursiveMatches();              // < ============================
+
+        Debug.WriteLine($"{combinations}");
+        sum += combinations;
+    }
+    stopWatch.Stop();
+
+    Springs info = new Springs();
+    Console.WriteLine($"Sum: {sum},     Elapsed Time: {stopWatch.Elapsed}s,     Operations: {info.Usage},     Cache Used: {info.CacheUsed}");
+
+}
+
+
+
+void Print_Test_Array(string springString, string dataString)
+{
+
+    Console.WriteLine();
+    Springs springs = new Springs(springString, dataString);
+    long combinations = springs.FindRecursiveMatches();              // < ============================
+    springs.PrintCache();
+    Console.WriteLine($"     Combinations: {combinations}");
+    Console.WriteLine();
+}
+
+
+
+public enum Part { Part1, Part2 };     // Top level Statements means this must at the bottom of the file.
