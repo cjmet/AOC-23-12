@@ -14,6 +14,7 @@ namespace AOC_23_12
         public int CacheUsed { get { return _cacheUsed; } }
 		public int Usage { get { return _usage; } }
 		static public void Reset() { _cacheUsed = 0; _usage = 0; }
+		static public Boolean UseCache { get; set; } = true;
 
 		public Springs() => new Springs(".", "1"); 
 		public Springs(string springsString, string dataString)
@@ -40,7 +41,7 @@ namespace AOC_23_12
 		public long FindRecursiveMatches(int springIndex, int clusterIndex)
 		{
 			_usage++;
-			if (_cache[springIndex, clusterIndex] >= 0) { _cacheUsed++; return _cache[springIndex, clusterIndex]; }
+			if (UseCache && _cache[springIndex, clusterIndex] >= 0) { _cacheUsed++; return _cache[springIndex, clusterIndex]; }
 
 			if (clusterIndex >= _data.Length)		
 				if (TailCheck(springIndex)) return _cache[springIndex, clusterIndex] = 1;  
