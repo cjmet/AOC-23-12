@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static AOC_23_12.Extensions;
+using System.Threading;
 
 namespace AOC_23_12
 {
@@ -17,8 +18,11 @@ namespace AOC_23_12
             int linenum = 0;
             Springs.Reset();
 
+            Console.WriteLine($"\nRunning: {filename}:{part} UseCache:{Springs.UseCache}");
             filename = FindFileInVisualStudio(filename);
             Debug.WriteLine($"Attempting to read {filename}");
+
+            CancellationToken ct = new CancellationTokenSource(3000).Token;
 
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -51,7 +55,19 @@ namespace AOC_23_12
                 }
 
                 Springs springs = new Springs(springsString, dataString);
-                long combinations = springs.FindRecursiveMatches();              // < ============================
+                long combinations;
+                try
+                {
+                    combinations = 
+                        springs.FindRecursiveMatches(ct);              
+                                // < ============================
+                }
+                catch (OperationCanceledException)
+                {
+                    Console.WriteLine("Operation Timed Out.");
+                    return;
+                }
+                
 
                 Debug.WriteLine($"{combinations}");
                 sum += combinations;
@@ -59,7 +75,7 @@ namespace AOC_23_12
             stopWatch.Stop();
 
             Springs info = new Springs();
-            Console.WriteLine($"Filename: {filename},      Lines: {linenum},    Part: {part}");
+            //Console.WriteLine($"Filename: {filename},      Lines: {linenum},    Part: {part}");
             Console.WriteLine($"Sum: {sum,13},     Elapsed Time: {stopWatch.Elapsed}s,     Operations: {info.Usage,6},     Cache Used: {info.CacheUsed}");
 
         }

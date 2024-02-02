@@ -22,12 +22,15 @@ namespace AOC_23_12
             Test_Array("???#???.??????????????#???.??????????????#???.??????????????#???.??????????????#???.???????????", "6,6,2,6,6,2,6,6,2,6,6,2,6,6,2", false);
             Console.WriteLine();
 
+            Console.WriteLine("Running Files");
             Springs.UseCache = false;
             new FileEngine("test.txt", Part.Part1);
 
             new FileEngine("input.txt", Part.Part1);
 
             new FileEngine("test.txt", Part.Part2);
+
+            new FileEngine("input.txt", Part.Part2);
 
             Springs.UseCache = true;
             new FileEngine("input.txt", Part.Part2);
@@ -42,11 +45,21 @@ namespace AOC_23_12
             void Test_Array(string springString, string dataString, bool printCache)
             {
 
-
+                Console.WriteLine($"\nTesing Spring: {springString} : {dataString}");
                 Springs springs = new Springs(springString, dataString);
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
-                long combinations = springs.FindRecursiveMatches();              // < ============================
+                long combinations;
+                try
+                {
+                    combinations = springs.FindRecursiveMatches(new CancellationTokenSource(3000).Token); 
+                }
+                catch (OperationCanceledException)
+                {
+                    Console.WriteLine("Operation Timed Out");
+                    return;
+                } 
+                        // < ============================
                 stopWatch.Stop();
                 if (printCache)
                 {
